@@ -124,7 +124,7 @@
   }
 
   /* Hero */
-  .hero { padding: 5rem 0 6.5rem; }
+  .hero { padding-top: 5rem; padding-bottom: 6.5rem; }
   .hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -168,9 +168,10 @@
   }
 
   /* Sections: generous vertical rhythm, left title rail on wide screens */
-  section {
-    padding: clamp(5.5rem, 13vh, 9.5rem) 0;
-    border-top: 1px solid var(--hairline);
+  section { border-top: 1px solid var(--hairline); }
+  section.wrap {
+    padding-top: clamp(5.5rem, 13vh, 9.5rem);
+    padding-bottom: clamp(5.5rem, 13vh, 9.5rem);
   }
   .section-body { max-width: 46rem; }
   h2 {
@@ -201,9 +202,7 @@
 
   /* Scroll blend: sections ease in as they rise into view and out as they leave.
      Opacity is driven per frame from the script below; with no JS, nothing hides. */
-  @media (prefers-reduced-motion: no-preference) {
-    html.js-blend .reveal { opacity: 0; will-change: opacity; }
-  }
+  html.js-blend .reveal { opacity: 0; will-change: opacity, transform; }
 
   h3 {
     font-size: 0.8rem;
@@ -510,18 +509,25 @@
 
   // Scroll blend: a section fades in as it rises into view and out as it leaves
   var blend = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
-  if (!reduced && blend.length && 'requestAnimationFrame' in window) {
+  if (blend.length && 'requestAnimationFrame' in window) {
     document.documentElement.classList.add('js-blend');
+    var shift = reduced ? 0 : 20;
     var queued = false;
     var paint = function () {
       queued = false;
       var vh = window.innerHeight || document.documentElement.clientHeight;
-      var zone = Math.max(140, vh * 0.22);
+      // Quick to arrive, slow to leave: nothing sits half-faded while you read.
+      var inZone = Math.max(160, vh * 0.2);
+      var outZone = Math.max(260, vh * 0.38);
       for (var i = 0; i < blend.length; i++) {
         var box = blend[i].getBoundingClientRect();
-        var p = Math.min((vh - box.top) / zone, box.bottom / zone);
+        var p = Math.min((vh - box.top) / inZone, box.bottom / outZone);
         p = Math.min(1, Math.max(0, p));
-        blend[i].style.opacity = p * p * (3 - 2 * p); // smoothstep
+        p = p * p * (3 - 2 * p); // smoothstep
+        blend[i].style.opacity = p;
+        if (shift) {
+          blend[i].style.transform = 'translateY(' + ((1 - p) * shift).toFixed(1) + 'px)';
+        }
       }
     };
     var schedule = function () {
