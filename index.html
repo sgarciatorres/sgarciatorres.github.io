@@ -9,6 +9,17 @@
 <meta property="og:description" content="Predoctoral Research Fellow, Center for International Development, Harvard Kennedy School.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.sgarciatorres.com/">
+<script>
+  // Runs before paint: a saved theme must be on <html> before the CSS resolves.
+  (function () {
+    try {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&amp;display=swap" rel="stylesheet">
@@ -38,6 +49,7 @@
       --hairline: #3A3833;
     }
   }
+  :root[data-theme="light"] { color-scheme: light; }
   :root[data-theme="dark"] {
     color-scheme: dark;
     --paper: #1B1B1A;
@@ -126,6 +138,26 @@
     color: var(--crimson);
     border-bottom-color: var(--crimson);
   }
+  header.site .wrap > nav { margin-left: auto; }
+  .theme-toggle {
+    display: none;
+    flex: none;
+    align-self: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    padding: 0;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  html.has-js .theme-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .theme-toggle:hover { color: var(--crimson); border-color: var(--crimson); }
+  .theme-toggle svg { width: 17px; height: 17px; display: block; }
 
   /* Hero */
   .hero { padding-top: 5rem; padding-bottom: 6.5rem; }
@@ -363,14 +395,19 @@
   @media (max-width: 700px) {
     body { font-size: 1.0625rem; line-height: 1.7; }
 
-    /* Wordmark over nav, rather than the nav wrapping mid-row. */
+    /* Wordmark and toggle on row one, nav across row two, rather than
+       the nav wrapping mid-row. */
     header.site .wrap {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.25rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 0.25rem 0.75rem;
       padding-top: 0.6rem;
       padding-bottom: 0.6rem;
     }
+    .wordmark { grid-area: 1 / 1; }
+    .theme-toggle { grid-area: 1 / 2; }
+    header.site .wrap > nav { grid-area: 2 / 1 / 3 / 3; margin-left: 0; }
     .wordmark { font-size: 1rem; }
     nav.site-nav { gap: 1.15rem; }
     nav.site-nav a { font-size: 0.95rem; }
@@ -409,6 +446,10 @@
       <a href="#cv" data-section="cv">CV</a>
       <a href="#contact" data-section="contact">Contact</a>
     </nav>
+    <button class="theme-toggle" type="button" aria-label="Switch theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.7v2M12 19.3v2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M2.7 12h2M19.3 12h2M5.2 18.8l1.4-1.4M17.4 6.6l1.4-1.4"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 14.2A8.5 8.5 0 0 1 9.8 3.6 8.5 8.5 0 1 0 20.4 14.2Z"/></svg>
+    </button>
   </div>
 </header>
 
@@ -565,6 +606,42 @@
 <script>
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+
+  // Theme toggle. With no choice stored the page follows the system setting,
+  // which is what the prefers-color-scheme rules above already do.
+  var toggle = document.querySelector('.theme-toggle');
+  if (toggle) {
+    root.classList.add('has-js');
+    var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+    var sun = toggle.querySelector('.icon-sun');
+    var moon = toggle.querySelector('.icon-moon');
+    var currentTheme = function () {
+      var set = root.getAttribute('data-theme');
+      return set === 'dark' || set === 'light' ? set : (systemDark.matches ? 'dark' : 'light');
+    };
+    var sync = function () {
+      var dark = currentTheme() === 'dark';
+      // Show the icon for the theme the click would move you to.
+      sun.style.display = dark ? 'block' : 'none';
+      moon.style.display = dark ? 'none' : 'block';
+      var label = dark ? 'Switch to light theme' : 'Switch to dark theme';
+      toggle.setAttribute('aria-label', label);
+      toggle.setAttribute('title', label);
+    };
+    toggle.addEventListener('click', function () {
+      var next = currentTheme() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      sync();
+    });
+    if (systemDark.addEventListener) {
+      systemDark.addEventListener('change', sync);
+    } else if (systemDark.addListener) {
+      systemDark.addListener(sync);
+    }
+    sync();
+  }
 
   // Scroll blend. Per block rather than per section: a section is taller than
   // the window, so fading it as a unit only ever showed at the seams.
