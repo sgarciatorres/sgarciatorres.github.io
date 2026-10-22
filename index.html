@@ -71,7 +71,7 @@
     border-radius: 2px;
   }
 
-  .wrap { max-width: 46rem; margin: 0 auto; padding: 0 1.5rem; }
+  .wrap { max-width: 71rem; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
 
   /* Header */
   header.site {
@@ -115,15 +115,15 @@
   nav.site-nav a:hover { color: var(--crimson); text-decoration: none; }
 
   /* Hero */
-  .hero { padding: 4.5rem 0 3rem; }
+  .hero { padding: 4.5rem 0 3.25rem; }
   .hero-grid {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 2.5rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(2rem, 6vw, 5rem);
     align-items: start;
   }
   h1 {
-    font-size: clamp(2.6rem, 7vw, 4.2rem);
+    font-size: clamp(2.6rem, 6.5vw, 5rem);
     font-weight: 500;
     line-height: 1.04;
     letter-spacing: -0.015em;
@@ -131,9 +131,10 @@
     font-optical-sizing: auto;
   }
   .role {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     line-height: 1.5;
     margin: 0 0 0.35rem;
+    max-width: 44rem;
   }
   .role a { color: var(--ink); border-bottom: 1px solid var(--crimson-soft); }
   .role a:hover { color: var(--crimson); text-decoration: none; }
@@ -141,26 +142,26 @@
     font-style: italic;
     color: var(--muted);
     margin: 0.9rem 0 0;
-    font-size: 1.1rem;
+    font-size: 1.12rem;
   }
   .portrait {
-    width: 180px;
-    height: 220px;
+    width: 250px;
+    height: 310px;
     object-fit: cover;
-    border-radius: 3px;
+    border-radius: 4px;
     border: 1px solid var(--hairline);
-    filter: saturate(0.92);
   }
-  .hero .bio { margin-top: 1.8rem; max-width: 40rem; }
+  .hero .bio { margin-top: 1.9rem; max-width: 44rem; }
   .hero .bio p { margin: 0 0 1rem; }
-  @media (max-width: 640px) {
+  @media (max-width: 700px) {
     .hero { padding-top: 3rem; }
     .hero-grid { grid-template-columns: 1fr; gap: 1.75rem; }
-    .portrait { width: 140px; height: 172px; order: -1; }
+    .portrait { width: 160px; height: 198px; order: -1; }
   }
 
-  /* Sections */
-  section { padding: 2.75rem 0; border-top: 1px solid var(--hairline); }
+  /* Sections: left title rail on wide screens, single column on narrow */
+  section { padding: 3rem 0; border-top: 1px solid var(--hairline); }
+  .section-body { max-width: 46rem; }
   h2 {
     font-size: 1.9rem;
     font-weight: 500;
@@ -176,12 +177,26 @@
     background: var(--crimson);
     margin-top: 0.55rem;
   }
+  @media (min-width: 980px) {
+    section {
+      display: grid;
+      grid-template-columns: 14rem minmax(0, 1fr);
+      column-gap: clamp(2.5rem, 5vw, 5rem);
+      align-items: start;
+    }
+    section > h2 {
+      position: sticky;
+      top: calc(4.6rem + env(safe-area-inset-top, 0px));
+      margin-bottom: 0;
+    }
+    .section-body { max-width: 48rem; }
+  }
   h3 {
     font-size: 1.15rem;
     font-weight: 600;
     margin: 2.2rem 0 1rem;
   }
-  section > h3:first-of-type { margin-top: 0; }
+  .section-body > h3:first-child { margin-top: 0; }
 
   /* News */
   ul.news { list-style: none; margin: 0; padding: 0; }
@@ -303,108 +318,116 @@
         <p class="role">Predoctoral Research Fellow,<br>
           <a href="https://www.hks.harvard.edu/centers/cid">Center for International Development</a>, Harvard Kennedy School</p>
         <p class="interests">Political economy &middot; development economics &middot; gender economics &middot; economic history</p>
+        <div class="bio">
+          <p>I am a Predoctoral Research Fellow at the <a href="https://www.hks.harvard.edu/centers/cid">Center for International Development</a> at the Harvard Kennedy School. Previously, I worked as a research assistant in Economics at the John&nbsp;F. Kennedy Institute at Freie Universit&auml;t Berlin.</p>
+          <p>Feel free to contact me via <a href="mailto:sebastian.garcia.torres@fu-berlin.de">email</a>.</p>
+        </div>
       </div>
       <img class="portrait" src="profile_pic.jpg" alt="Portrait of Sebastian Garcia-Torres" onerror="this.style.display='none'">
-    </div>
-    <div class="bio">
-      <p>I am a Predoctoral Research Fellow at the <a href="https://www.hks.harvard.edu/centers/cid">Center for International Development</a> at the Harvard Kennedy School. Previously, I worked as a research assistant in Economics at the John&nbsp;F. Kennedy Institute at Freie Universit&auml;t Berlin.</p>
-      <p>Feel free to contact me via <a href="mailto:sebastian.garcia.torres@fu-berlin.de">email</a>.</p>
     </div>
   </div>
 
   <section class="wrap" id="news">
     <h2>News</h2>
-    <ul class="news">
-      <li>
-        <span class="date">Sep 2025</span>
-        <span>Started as Research Fellow at the <a href="https://www.hks.harvard.edu/centers/cid/about-cid/people/fellows/sebastian-garcia-torres">Harvard Center for International Development</a>.</span>
-      </li>
-      <li>
-        <span class="date">Oct 2024</span>
-        <span>&ldquo;Women in Political Power and School Closure during COVID Times&rdquo; (with N.&nbsp;Danzer, M.&nbsp;Steinhardt, and L.&nbsp;Stella) published in <a href="https://academic.oup.com/economicpolicy"><em>Economic Policy</em></a>.</span>
-      </li>
-      <li>
-        <span class="date">Sep 2024</span>
-        <span>Member of the 2024&ndash;2025 cohort of the <a href="https://www.deutschlandstipendium.de/deutschlandstipendium/de/services/english/english_node.html">Deutschlandstipendium</a> scholarship at Freie Universit&auml;t Berlin.</span>
-      </li>
-      <li>
-        <span class="date">Dec 2023</span>
-        <span>DAAD Prize for Outstanding Foreign Student 2023 &mdash; <a href="https://www.fu-berlin.de/en/presse/informationen/fup/2023/fup_23_294-daad-preis-garcia-torres/index.html">announcement</a>, <a href="https://www.fu-berlin.de/campusleben/campus/2023/231208-daad-preis/index.html">interview</a>.</span>
-      </li>
-    </ul>
+    <div class="section-body">
+      <ul class="news">
+        <li>
+          <span class="date">Sep 2025</span>
+          <span>Started as Research Fellow at the <a href="https://www.hks.harvard.edu/centers/cid/about-cid/people/fellows/sebastian-garcia-torres">Harvard Center for International Development</a>.</span>
+        </li>
+        <li>
+          <span class="date">Oct 2024</span>
+          <span>&ldquo;Women in Political Power and School Closure during COVID Times&rdquo; (with N.&nbsp;Danzer, M.&nbsp;Steinhardt, and L.&nbsp;Stella) published in <a href="https://academic.oup.com/economicpolicy"><em>Economic Policy</em></a>.</span>
+        </li>
+        <li>
+          <span class="date">Sep 2024</span>
+          <span>Member of the 2024&ndash;2025 cohort of the <a href="https://www.deutschlandstipendium.de/deutschlandstipendium/de/services/english/english_node.html">Deutschlandstipendium</a> scholarship at Freie Universit&auml;t Berlin.</span>
+        </li>
+        <li>
+          <span class="date">Dec 2023</span>
+          <span>DAAD Prize for Outstanding Foreign Student 2023 &mdash; <a href="https://www.fu-berlin.de/en/presse/informationen/fup/2023/fup_23_294-daad-preis-garcia-torres/index.html">announcement</a>, <a href="https://www.fu-berlin.de/campusleben/campus/2023/231208-daad-preis/index.html">interview</a>.</span>
+        </li>
+      </ul>
+    </div>
   </section>
 
   <section class="wrap" id="research">
     <h2>Research</h2>
+    <div class="section-body">
 
-    <h3>Peer-reviewed publications</h3>
+      <h3>Peer-reviewed publications</h3>
 
-    <article class="pub">
-      <p class="pub-title">Women in Political Power and School Closure during COVID Times</p>
-      <p class="pub-meta">with <a href="https://www.wiwiss.fu-berlin.de/en/fachbereich/vwl/danzer/Team/Professorin/Natalia-Danzer/index.html">Natalia Danzer</a>, <a href="https://sites.google.com/site/maxfriedrichsteinhardt/home">Max Steinhardt</a>, and <a href="https://www.lucastella.eu/">Luca Stella</a> &middot; <em class="pub-venue">Economic Policy</em>, 2024, 39(120), 765&ndash;810</p>
-      <p class="pub-links">
-        <a href="https://doi.org/10.1093/epolic/eiae033">Publication</a>
-        <a href="https://cepr.org/voxeu/columns/womens-political-representation-matters-evidence-school-closures-during-pandemic">VoxEU column</a>
-        <a href="https://nadaesgratis.es/admin/la-representacion-de-las-mujeres-en-la-politica-importa-evidencia-de-los-cierres-escolares-durante-la-pandemia">Nada es Gratis</a>
-      </p>
-      <details>
-        <summary>Abstract</summary>
-        <p>This study explores the relationship between women&rsquo;s representation in political power and school closures during the COVID-19 pandemic. Using a cross-country dataset in Europe, we document a striking negative relationship between the share of female members in national governments and school closures. We show that a one standard deviation increase in female members of national governments is associated with a significant reduction in the likelihood of school lockdowns by 24% relative to the average share of school closures. This result is robust to an extensive set of sensitivity checks. We attribute this pattern to a higher awareness of female politicians about the potential costs that school closures imply for families, in particular working mothers with young children.</p>
-      </details>
-    </article>
+      <article class="pub">
+        <p class="pub-title">Women in Political Power and School Closure during COVID Times</p>
+        <p class="pub-meta">with <a href="https://www.wiwiss.fu-berlin.de/en/fachbereich/vwl/danzer/Team/Professorin/Natalia-Danzer/index.html">Natalia Danzer</a>, <a href="https://sites.google.com/site/maxfriedrichsteinhardt/home">Max Steinhardt</a>, and <a href="https://www.lucastella.eu/">Luca Stella</a> &middot; <em class="pub-venue">Economic Policy</em>, 2024, 39(120), 765&ndash;810</p>
+        <p class="pub-links">
+          <a href="https://doi.org/10.1093/epolic/eiae033">Publication</a>
+          <a href="https://cepr.org/voxeu/columns/womens-political-representation-matters-evidence-school-closures-during-pandemic">VoxEU column</a>
+          <a href="https://nadaesgratis.es/admin/la-representacion-de-las-mujeres-en-la-politica-importa-evidencia-de-los-cierres-escolares-durante-la-pandemia">Nada es Gratis</a>
+        </p>
+        <details>
+          <summary>Abstract</summary>
+          <p>This study explores the relationship between women&rsquo;s representation in political power and school closures during the COVID-19 pandemic. Using a cross-country dataset in Europe, we document a striking negative relationship between the share of female members in national governments and school closures. We show that a one standard deviation increase in female members of national governments is associated with a significant reduction in the likelihood of school lockdowns by 24% relative to the average share of school closures. This result is robust to an extensive set of sensitivity checks. We attribute this pattern to a higher awareness of female politicians about the potential costs that school closures imply for families, in particular working mothers with young children.</p>
+        </details>
+      </article>
 
-    <h3>Selected work in progress</h3>
+      <h3>Selected work in progress</h3>
 
-    <article class="pub">
-      <p class="pub-title">The Effect of Interracial Peers on Political Preferences: Evidence from Longitudinal Data from Schools in the United States</p>
-      <details>
-        <summary>Abstract</summary>
-        <p>This study explores the enduring influence of Black peers in school on their classmates&rsquo; future political preferences. Using comprehensive panel data from a representative sample of US school students followed over time, I leverage quasi-random variation in the share of Black peers across cohorts within a school. The results suggest that a higher proportion of same-gender Black peers is associated with a lower likelihood of holding conservative political preferences in the future. I focus on political preferences in a period in the United States, when race was a highly decisive issue, i.e., the election year of Barack Obama, thus highlighting the importance of topic salience on peer effects. I provide suggestive evidence for the argument that the re-categorization of different racial groups into a shared school-belonging identity may be one of the forces behind these results.</p>
-      </details>
-    </article>
+      <article class="pub">
+        <p class="pub-title">The Effect of Interracial Peers on Political Preferences: Evidence from Longitudinal Data from Schools in the United States</p>
+        <details>
+          <summary>Abstract</summary>
+          <p>This study explores the enduring influence of Black peers in school on their classmates&rsquo; future political preferences. Using comprehensive panel data from a representative sample of US school students followed over time, I leverage quasi-random variation in the share of Black peers across cohorts within a school. The results suggest that a higher proportion of same-gender Black peers is associated with a lower likelihood of holding conservative political preferences in the future. I focus on political preferences in a period in the United States, when race was a highly decisive issue, i.e., the election year of Barack Obama, thus highlighting the importance of topic salience on peer effects. I provide suggestive evidence for the argument that the re-categorization of different racial groups into a shared school-belonging identity may be one of the forces behind these results.</p>
+        </details>
+      </article>
 
-    <article class="pub">
-      <p class="pub-title">Risky Peers and Crime</p>
-      <p class="pub-meta">with <a href="https://sites.google.com/site/oliviermarie/">Olivier Marie</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/">Max Steinhardt</a></p>
-      <p class="pub-links"><a href="https://drive.google.com/file/d/1dhB8eRJ2n1FpPF9uL2h4-RWdoukheg6Q/view?usp=sharing">Slides</a></p>
-      <details>
-        <summary>Abstract</summary>
-        <p>This paper investigates how youth peer environments shape long-term criminal outcomes. While peer influence is known to affect adolescent behavior, we still lack causal evidence on how much peers matter for criminal involvement&mdash;both as perpetrators and as victims. Using rich data from the Add Health study, we estimate the causal effect of exposure to risk-prone peers during adolescence on adult crime. Because risk preference is only partially observed in the data, we use machine learning techniques to impute missing responses and construct school-cohort level measures of peer risk attitudes. We then exploit variation in peer composition across school grades to identify the effect of peer exposure on future criminal outcomes. We provide the first causal evidence that adolescent peer risk preferences influence both criminal perpetration and victimization. Individuals exposed to a higher share of risk-prone peers are significantly more likely to engage in crime later in life. These effects are especially pronounced for same-gender peers and are notably strong among women. Our findings underscore the importance of peer environments in shaping gendered pathways into crime and highlight the role of social risk transmission in long-term behavioral development.</p>
-      </details>
-    </article>
+      <article class="pub">
+        <p class="pub-title">Risky Peers and Crime</p>
+        <p class="pub-meta">with <a href="https://sites.google.com/site/oliviermarie/">Olivier Marie</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/">Max Steinhardt</a></p>
+        <p class="pub-links"><a href="https://drive.google.com/file/d/1dhB8eRJ2n1FpPF9uL2h4-RWdoukheg6Q/view?usp=sharing">Slides</a></p>
+        <details>
+          <summary>Abstract</summary>
+          <p>This paper investigates how youth peer environments shape long-term criminal outcomes. While peer influence is known to affect adolescent behavior, we still lack causal evidence on how much peers matter for criminal involvement&mdash;both as perpetrators and as victims. Using rich data from the Add Health study, we estimate the causal effect of exposure to risk-prone peers during adolescence on adult crime. Because risk preference is only partially observed in the data, we use machine learning techniques to impute missing responses and construct school-cohort level measures of peer risk attitudes. We then exploit variation in peer composition across school grades to identify the effect of peer exposure on future criminal outcomes. We provide the first causal evidence that adolescent peer risk preferences influence both criminal perpetration and victimization. Individuals exposed to a higher share of risk-prone peers are significantly more likely to engage in crime later in life. These effects are especially pronounced for same-gender peers and are notably strong among women. Our findings underscore the importance of peer environments in shaping gendered pathways into crime and highlight the role of social risk transmission in long-term behavioral development.</p>
+        </details>
+      </article>
 
-    <article class="pub">
-      <p class="pub-title">Buffalo Soldiers</p>
-      <p class="pub-meta">with <a href="https://andreas-ferrara.com/">Andreas Ferrara</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/">Max Steinhardt</a></p>
-    </article>
+      <article class="pub">
+        <p class="pub-title">Buffalo Soldiers</p>
+        <p class="pub-meta">with <a href="https://andreas-ferrara.com/">Andreas Ferrara</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/">Max Steinhardt</a></p>
+      </article>
 
-    <article class="pub">
-      <p class="pub-title">Polygyny and Child Marriage in Sub-Saharan Africa</p>
-      <p class="pub-meta">with <a href="https://sites.harvard.edu/laferrara/">Eliana La Ferrara</a></p>
-    </article>
+      <article class="pub">
+        <p class="pub-title">Polygyny and Child Marriage in Sub-Saharan Africa</p>
+        <p class="pub-meta">with <a href="https://sites.harvard.edu/laferrara/">Eliana La Ferrara</a></p>
+      </article>
+    </div>
   </section>
 
   <section class="wrap" id="cv">
     <h2>Curriculum vitae</h2>
-    <p><a class="cv-download" href="garcia_torres_cv_202512.pdf">Download CV (PDF)</a></p>
-    <p>Research Fellow, Harvard Center for International Development (2025&ndash;present).</p>
+    <div class="section-body">
+      <p><a class="cv-download" href="garcia_torres_cv_202512.pdf">Download CV (PDF)</a></p>
+      <p>Research Fellow, Harvard Center for International Development (2025&ndash;present).</p>
 
-    <h3>Conferences and seminars</h3>
-    <dl class="conf">
-      <dt>2025</dt><dd>14th Alp-Pop Conference; Harvard CID Research X-Change</dd>
-      <dt>2024</dt><dd>37th Annual Conference ESPE; BeNa Winter Workshop</dd>
-      <dt>2023</dt><dd>ifo CEMIR Seminar</dd>
-    </dl>
+      <h3>Conferences and seminars</h3>
+      <dl class="conf">
+        <dt>2025</dt><dd>14th Alp-Pop Conference; Harvard CID Research X-Change</dd>
+        <dt>2024</dt><dd>37th Annual Conference ESPE; BeNa Winter Workshop</dd>
+        <dt>2023</dt><dd>ifo CEMIR Seminar</dd>
+      </dl>
+    </div>
   </section>
 
   <section class="wrap" id="contact">
     <h2>Contact</h2>
-    <ul class="contact-list">
-      <li><span class="label">Email</span> <a href="mailto:sebastian.garcia.torres@fu-berlin.de">sebastian.garcia.torres@fu-berlin.de</a></li>
-      <li><span class="label">X / Twitter</span> <a href="https://twitter.com/s_garcia_torres">@s_garcia_torres</a></li>
-      <li><span class="label">LinkedIn</span> <a href="https://www.linkedin.com/in/sebastian-garcia-torres-591021294/">sebastian-garcia-torres</a></li>
-      <li><span class="label">Instagram</span> <a href="https://www.instagram.com/sebastian.garcia.t/">sebastian.garcia.t</a></li>
-    </ul>
+    <div class="section-body">
+      <ul class="contact-list">
+        <li><span class="label">Email</span> <a href="mailto:sebastian.garcia.torres@fu-berlin.de">sebastian.garcia.torres@fu-berlin.de</a></li>
+        <li><span class="label">X / Twitter</span> <a href="https://twitter.com/s_garcia_torres">@s_garcia_torres</a></li>
+        <li><span class="label">LinkedIn</span> <a href="https://www.linkedin.com/in/sebastian-garcia-torres-591021294/">sebastian-garcia-torres</a></li>
+        <li><span class="label">Instagram</span> <a href="https://www.instagram.com/sebastian.garcia.t/">sebastian.garcia.t</a></li>
+      </ul>
+    </div>
   </section>
 
 </main>
