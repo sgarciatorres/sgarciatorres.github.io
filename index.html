@@ -167,25 +167,17 @@
   .hero .bio p { margin: 0 0 1rem; }
   @media (max-width: 700px) {
     .hero { padding-top: 2.5rem; padding-bottom: 3rem; }
-    /* Portrait beside the name, everything else full width beneath.
-       display:contents lifts the inner wrapper's children into this grid. */
+    /* Portrait on top, with it and the name block centred.
+       The bio stays left aligned -- centred prose is hard to read. */
     .hero-grid {
-      grid-template-columns: auto minmax(0, 1fr);
-      column-gap: 1.1rem;
-      row-gap: 1.2rem;
-      align-items: center;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      text-align: center;
     }
-    .hero-grid > div { display: contents; }
-    .portrait { grid-area: 1 / 1; width: 108px; height: 134px; order: 0; }
-    .hero-grid h1 {
-      grid-area: 1 / 2;
-      font-size: clamp(1.7rem, 7.5vw, 2.1rem);
-      margin: 0;
-    }
-    .hero .role, .hero .interests, .hero .bio { grid-column: 1 / -1; }
+    .portrait { width: 168px; height: 208px; order: -1; justify-self: center; }
     .role { font-size: 1.15rem; }
     .interests { font-size: 1rem; }
-    .hero .bio { margin-top: 0.3rem; }
+    .hero .bio { margin-top: 1.6rem; text-align: left; }
   }
 
   /* Sections: generous vertical rhythm, left title rail on wide screens */
