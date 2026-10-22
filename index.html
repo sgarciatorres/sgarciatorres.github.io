@@ -49,13 +49,17 @@
     --hairline: #3A3833;
   }
   *, *::before, *::after { box-sizing: inherit; }
-  html { scroll-behavior: smooth; scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px)); }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
+    -webkit-text-size-adjust: 100%;
+  }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
   }
-  /* The header wraps to two rows on narrow screens, so anchors need more room. */
-  @media (max-width: 560px) {
-    html { scroll-padding-top: calc(8rem + env(safe-area-inset-top, 0px)); }
+  /* The header stacks to two rows on phones, so anchors need to clear more. */
+  @media (max-width: 700px) {
+    html { scroll-padding-top: calc(6.25rem + env(safe-area-inset-top, 0px)); }
   }
   body {
     margin: 0;
@@ -75,7 +79,7 @@
     border-radius: 2px;
   }
 
-  .wrap { max-width: 71rem; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
+  .wrap { max-width: 78rem; margin: 0 auto; padding: 0 clamp(1.1rem, 3vw, 2.25rem); }
 
   /* Header */
   header.site {
@@ -162,9 +166,12 @@
   .hero .bio { margin-top: 1.9rem; max-width: 44rem; }
   .hero .bio p { margin: 0 0 1rem; }
   @media (max-width: 700px) {
-    .hero { padding-top: 3rem; padding-bottom: 3rem; }
+    .hero { padding-top: 2.5rem; padding-bottom: 3rem; }
     .hero-grid { grid-template-columns: 1fr; gap: 1.75rem; }
-    .portrait { width: 160px; height: 198px; order: -1; }
+    .portrait { width: 168px; height: 208px; order: -1; }
+    .role { font-size: 1.15rem; }
+    .interests { font-size: 1rem; }
+    .hero .bio { margin-top: 1.5rem; }
   }
 
   /* Sections: generous vertical rhythm, left title rail on wide screens */
@@ -192,17 +199,16 @@
   @media (min-width: 980px) {
     section {
       display: grid;
-      grid-template-columns: 14rem minmax(0, 1fr);
-      column-gap: clamp(2.5rem, 5vw, 5rem);
+      grid-template-columns: clamp(11rem, 18vw, 16rem) minmax(0, 1fr);
+      column-gap: clamp(2.5rem, 5vw, 6rem);
       align-items: start;
     }
     section > h2 { margin-bottom: 0; }
     .section-body { max-width: 48rem; }
   }
 
-  /* Scroll blend: sections ease in as they rise into view and out as they leave.
-     Opacity is driven per frame from the script below; with no JS, nothing hides. */
-  html.js-blend .reveal { opacity: 0; will-change: opacity, transform; }
+  /* Scroll blend lives entirely in the script below: it sets opacity inline on
+     each block. Nothing is hidden in CSS, so with no JS the page is just solid. */
 
   h3 {
     font-size: 0.8rem;
@@ -336,6 +342,53 @@
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
+  }
+
+  /* ---- Reading view: tablets ---- */
+  @media (min-width: 701px) and (max-width: 979px) {
+    section.wrap {
+      padding-top: clamp(4.25rem, 10vh, 6.5rem);
+      padding-bottom: clamp(4.25rem, 10vh, 6.5rem);
+    }
+    h2 { font-size: 1.75rem; }
+  }
+
+  /* ---- Reading view: phones ---- */
+  @media (max-width: 700px) {
+    body { font-size: 1.0625rem; line-height: 1.7; }
+
+    /* Wordmark over nav, rather than the nav wrapping mid-row. */
+    header.site .wrap {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+      padding-top: 0.6rem;
+      padding-bottom: 0.6rem;
+    }
+    .wordmark { font-size: 1rem; }
+    nav.site-nav { gap: 1.15rem; }
+    nav.site-nav a { font-size: 0.95rem; }
+
+    section.wrap {
+      padding-top: clamp(3.25rem, 9vh, 4.75rem);
+      padding-bottom: clamp(3.25rem, 9vh, 4.75rem);
+    }
+    h2 { font-size: 1.6rem; margin-bottom: 1.3rem; }
+    h3 { margin: 3.25rem 0 1.5rem; letter-spacing: 0.12em; }
+
+    .pub { margin-bottom: 2.5rem; }
+    .pub-title { font-size: 1.2rem; }
+    .section-body > h3:nth-of-type(2) ~ .pub .pub-title { font-size: 1.08rem; }
+    .pub-meta { font-size: 0.98rem; }
+    .pub summary { padding: 0.35rem 0; }
+    .pub details p { padding: 0.95rem 1rem; font-size: 0.97rem; }
+
+    /* Year above its entries reads better than a 5.5rem indent at this width. */
+    dl.conf dt { float: none; width: auto; margin-bottom: 0.15rem; }
+    dl.conf dd { margin: 0 0 1.1rem; }
+
+    .contact-list a { padding: 0.7rem 0.25rem; }
+    footer.site .wrap { flex-direction: column; gap: 0.4rem; }
   }
 </style>
 </head>
@@ -507,21 +560,25 @@
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Scroll blend: a section fades in as it rises into view and out as it leaves
-  var blend = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  // Scroll blend. Per block rather than per section: a section is taller than
+  // the window, so fading it as a unit only ever showed at the seams.
+  var blend = Array.prototype.slice.call(document.querySelectorAll([
+    '.hero h1', '.hero .role', '.hero .interests', '.hero .bio', '.portrait',
+    'section > h2', '.section-body > h3', '.section-body > p',
+    'ul.news > li', 'article.pub',
+    'dl.conf > dt', 'dl.conf > dd', '.contact-list > li'
+  ].join(',')));
   if (blend.length && 'requestAnimationFrame' in window) {
-    document.documentElement.classList.add('js-blend');
-    var shift = reduced ? 0 : 20;
+    var shift = reduced ? 0 : 10;
     var queued = false;
     var paint = function () {
       queued = false;
       var vh = window.innerHeight || document.documentElement.clientHeight;
-      // Quick to arrive, slow to leave: nothing sits half-faded while you read.
-      var inZone = Math.max(160, vh * 0.2);
-      var outZone = Math.max(260, vh * 0.38);
+      var topBand = Math.max(150, vh * 0.2);
+      var botBand = Math.max(170, vh * 0.24);
       for (var i = 0; i < blend.length; i++) {
         var box = blend[i].getBoundingClientRect();
-        var p = Math.min((vh - box.top) / inZone, box.bottom / outZone);
+        var p = Math.min((vh - box.top) / botBand, box.bottom / topBand);
         p = Math.min(1, Math.max(0, p));
         p = p * p * (3 - 2 * p); // smoothstep
         blend[i].style.opacity = p;
