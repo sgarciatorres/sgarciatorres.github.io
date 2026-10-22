@@ -53,6 +53,10 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
   }
+  /* The header wraps to two rows on narrow screens, so anchors need more room. */
+  @media (max-width: 560px) {
+    html { scroll-padding-top: calc(8rem + env(safe-area-inset-top, 0px)); }
+  }
   body {
     margin: 0;
     background: var(--paper);
@@ -120,7 +124,7 @@
   }
 
   /* Hero */
-  .hero { padding: 5rem 0 4.5rem; }
+  .hero { padding: 5rem 0 6.5rem; }
   .hero-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -165,7 +169,7 @@
 
   /* Sections: generous vertical rhythm, left title rail on wide screens */
   section {
-    padding: clamp(4rem, 9vh, 7rem) 0;
+    padding: clamp(5.5rem, 13vh, 9.5rem) 0;
     border-top: 1px solid var(--hairline);
   }
   .section-body { max-width: 46rem; }
@@ -191,28 +195,25 @@
       column-gap: clamp(2.5rem, 5vw, 5rem);
       align-items: start;
     }
-    section > h2 {
-      position: sticky;
-      top: calc(4.6rem + env(safe-area-inset-top, 0px));
-      margin-bottom: 0;
-    }
+    section > h2 { margin-bottom: 0; }
     .section-body { max-width: 48rem; }
   }
 
-  /* Scroll reveal (disabled when reduced motion is preferred) */
+  /* Scroll blend: sections ease in as they rise into view and out as they leave.
+     Opacity is driven per frame from the script below; with no JS, nothing hides. */
   @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .reveal.visible { opacity: 1; transform: none; }
+    html.js-blend .reveal { opacity: 0; will-change: opacity; }
   }
 
   h3 {
-    font-size: 1.15rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    margin: 2.4rem 0 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin: 4.5rem 0 2.1rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--hairline);
   }
   .section-body > h3:first-child { margin-top: 0; }
 
@@ -234,17 +235,34 @@
   }
 
   /* Bibliography */
-  .pub { margin: 0 0 2.4rem; }
+  .pub { margin: 0 0 3.2rem; }
   .pub:last-child { margin-bottom: 0; }
-  .pub-title { font-size: 1.22rem; font-weight: 600; line-height: 1.35; margin: 0; }
-  .pub-meta { margin: 0.25rem 0 0.45rem; color: var(--muted); }
+  .pub-title {
+    font-size: 1.34rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    margin: 0 0 0.4rem;
+    max-width: 34em;
+  }
+  /* Work in progress sits one step below peer-reviewed work: every .pub
+     that follows the second heading in the section body. */
+  .section-body > h3:nth-of-type(2) ~ .pub .pub-title { font-size: 1.15rem; }
+  .pub-meta { margin: 0 0 0.5rem; color: var(--muted); font-size: 1.02rem; line-height: 1.6; }
   .pub-venue { color: var(--ink); }
-  .pub-links { font-size: 1rem; margin: 0.15rem 0 0.5rem; }
-  .pub-links a { margin-right: 1.1rem; }
+  .pub-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.2rem;
+    font-size: 0.95rem;
+    margin: 0 0 0.55rem;
+  }
+  .pub-links a { margin: 0; }
   .pub summary {
     cursor: pointer;
     color: var(--muted);
-    font-size: 1rem;
+    font-size: 0.93rem;
+    letter-spacing: 0.03em;
     list-style: none;
     user-select: none;
     display: inline-block;
@@ -255,13 +273,16 @@
   .pub summary::before { content: "+ "; color: var(--crimson); font-weight: 600; }
   .pub details[open] summary::before { content: "− "; }
   .pub details p {
-    margin: 0.6rem 0 0.25rem;
-    font-size: 1.04rem;
-    line-height: 1.6;
+    margin: 0.75rem 0 0.25rem;
+    max-width: 40em;
+    font-size: 1rem;
+    line-height: 1.68;
+    color: var(--muted);
     background: var(--card);
     border: 1px solid var(--hairline);
-    padding: 1rem 1.15rem;
-    border-radius: 4px;
+    border-left: 2px solid var(--crimson-soft);
+    padding: 1.1rem 1.25rem;
+    border-radius: 3px;
   }
 
   /* CV */
@@ -487,20 +508,31 @@
 (function () {
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Scroll reveal: each section appears as it enters the viewport
-  var sections = document.querySelectorAll('.reveal');
-  if (!reduced && 'IntersectionObserver' in window) {
-    var revealObs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          revealObs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    sections.forEach(function (s) { revealObs.observe(s); });
-  } else {
-    sections.forEach(function (s) { s.classList.add('visible'); });
+  // Scroll blend: a section fades in as it rises into view and out as it leaves
+  var blend = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if (!reduced && blend.length && 'requestAnimationFrame' in window) {
+    document.documentElement.classList.add('js-blend');
+    var queued = false;
+    var paint = function () {
+      queued = false;
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var zone = Math.max(140, vh * 0.22);
+      for (var i = 0; i < blend.length; i++) {
+        var box = blend[i].getBoundingClientRect();
+        var p = Math.min((vh - box.top) / zone, box.bottom / zone);
+        p = Math.min(1, Math.max(0, p));
+        blend[i].style.opacity = p * p * (3 - 2 * p); // smoothstep
+      }
+    };
+    var schedule = function () {
+      if (!queued) { queued = true; requestAnimationFrame(paint); }
+    };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    window.addEventListener('hashchange', schedule);
+    window.addEventListener('load', schedule);
+    setTimeout(schedule, 0);
+    paint();
   }
 
   // Nav highlight: mark the section currently in view
