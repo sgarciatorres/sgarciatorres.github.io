@@ -241,7 +241,11 @@
       column-gap: clamp(2.5rem, 5vw, 6rem);
       align-items: start;
     }
-    section > h2 { margin-bottom: 0; }
+    section > h2 {
+      position: sticky;
+      top: calc(5.5rem + env(safe-area-inset-top, 0px));
+      margin-bottom: 0;
+    }
     .section-body { max-width: 48rem; }
   }
 
@@ -647,10 +651,22 @@
   // the window, so fading it as a unit only ever showed at the seams.
   var blend = Array.prototype.slice.call(document.querySelectorAll([
     '.hero h1', '.hero .role', '.hero .interests', '.hero .bio', '.portrait',
-    'section > h2', '.section-body > h3', '.section-body > p',
+    '.section-body > h3', '.section-body > p',
     'ul.news > li', 'article.pub',
     'dl.conf > dt', 'dl.conf > dd', '.contact-list > li'
   ].join(',')));
+  // A pinned title is driven by its own section's position instead, so it
+  // holds at full strength the whole way down and hands over at the seam.
+  var railTitles = [].slice.call(document.querySelectorAll('section > h2'));
+  var railQuery = window.matchMedia('(min-width: 980px)');
+  var pinnedTop = 88;
+  var measurePinned = function () {
+    if (railTitles.length && railQuery.matches) {
+      var v = parseFloat(window.getComputedStyle(railTitles[0]).top);
+      if (!isNaN(v)) pinnedTop = v;
+    }
+  };
+
   if (blend.length && 'requestAnimationFrame' in window) {
     var shift = reduced ? 0 : 10;
     var queued = false;
@@ -669,15 +685,35 @@
           blend[i].style.transform = 'translateY(' + ((1 - p) * shift).toFixed(1) + 'px)';
         }
       }
+
+      var pinned = railQuery.matches;
+      for (var j = 0; j < railTitles.length; j++) {
+        var title = railTitles[j];
+        var q;
+        if (pinned) {
+          // Fade on the section's own travel: in as it arrives, out over the
+          // last stretch so it clears before the next title takes the rail.
+          var sec = title.parentNode.getBoundingClientRect();
+          q = Math.min((vh - sec.top) / botBand, (sec.bottom - pinnedTop) / 170);
+        } else {
+          var own = title.getBoundingClientRect();
+          q = Math.min((vh - own.top) / botBand, own.bottom / topBand);
+        }
+        q = Math.min(1, Math.max(0, q));
+        title.style.opacity = q * q * (3 - 2 * q);
+        // No translate here: it would shift a pinned title off its offset.
+        title.style.transform = '';
+      }
     };
     var schedule = function () {
       if (!queued) { queued = true; requestAnimationFrame(paint); }
     };
     window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', schedule);
+    window.addEventListener('resize', function () { measurePinned(); schedule(); });
     window.addEventListener('hashchange', schedule);
     window.addEventListener('load', schedule);
     setTimeout(schedule, 0);
+    measurePinned();
     paint();
   }
 
