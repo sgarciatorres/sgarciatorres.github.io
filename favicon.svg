@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Hand-drawn smiley with curly hair">
+  <g fill="none" stroke="#A838AC" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Hair: tight overlapping loops along a dome. The stroke is wide
+         relative to the radius, so they read as a dense mass with small
+         light centres. Radii and heights are jittered to keep both edges
+         uneven, the way the pen left them. -->
+    <g stroke-width="6.4">
+      <circle cx="11" cy="32" r="6.2"/>
+      <circle cx="20" cy="26.5" r="6.8"/>
+      <circle cx="29" cy="23.5" r="6"/>
+      <circle cx="38" cy="20" r="6.6"/>
+      <circle cx="47" cy="20.5" r="6"/>
+      <circle cx="56" cy="19.5" r="6.7"/>
+      <circle cx="65" cy="22.5" r="6"/>
+      <circle cx="74" cy="25" r="6.5"/>
+      <circle cx="83" cy="30.5" r="6"/>
+      <circle cx="90" cy="34" r="5.4"/>
+    </g>
+    <!-- Smile -->
+    <path d="M 13,77 C 20,95 43,100 61,92 C 72,87 78,81 80,72" stroke-width="4"/>
+  </g>
+  <g fill="#A838AC">
+    <ellipse cx="27" cy="57" rx="7.4" ry="9.4" transform="rotate(-12 27 57)"/>
+    <ellipse cx="66" cy="55" rx="7.4" ry="9.4" transform="rotate(10 66 55)"/>
+  </g>
+</svg>
