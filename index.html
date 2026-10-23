@@ -291,6 +291,13 @@
       top: calc(5.5rem + env(safe-area-inset-top, 0px));
       z-index: 1;
       background: var(--paper);
+      /* The pinned heading starts 23px below the site header, and entries
+         were visible scrolling through that strip. This shadow is a solid
+         paper rectangle offset straight up, extending the background past
+         the header. It is shorter than the heading box, so the two overlap
+         with no seam, and shorter than the heading's top margin, so it
+         covers nothing while the heading is still in flow. */
+      box-shadow: 0 -2.5rem 0 0 var(--paper);
       margin-top: 3.6rem;
       padding-top: 0.9rem;
     }
