@@ -213,7 +213,17 @@
     .portrait { width: 168px; height: 208px; order: -1; justify-self: center; }
     .role { font-size: 1.15rem; }
     .interests { font-size: 1rem; }
-    .hero .bio { margin-top: 1.6rem; text-align: left; }
+    .hero .bio { margin-top: 1.6rem; }
+    /* Every line the same length. text-wrap: balance would be the gentler
+       tool, but Chrome only balances blocks of six lines or fewer and the
+       bio runs to seven, so it is silently ignored. Justify holds the
+       right edge; the last line centres to finish the block. */
+    .hero .bio p:first-child {
+      text-align: justify;
+      text-align-last: center;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
   }
 
   /* Sections: generous vertical rhythm, left title rail on wide screens */
