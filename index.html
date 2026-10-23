@@ -62,6 +62,10 @@
   }
   *, *::before, *::after { box-sizing: inherit; }
   html {
+    /* Large screens get a bigger page, not just wider margins. Everything
+       below is in rem, so type and container scale together and the line
+       length in characters stays put. Capped so it cannot get silly. */
+    font-size: clamp(1rem, 0.1075rem + 0.952vw, 1.45rem);
     scroll-behavior: smooth;
     scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
     -webkit-text-size-adjust: 100%;
@@ -157,7 +161,7 @@
   }
   html.has-js .theme-toggle { display: inline-flex; align-items: center; justify-content: center; }
   .theme-toggle:hover { color: var(--crimson); border-color: var(--crimson); }
-  .theme-toggle svg { width: 17px; height: 17px; display: block; }
+  .theme-toggle svg { width: 1.0625rem; height: 1.0625rem; display: block; }
 
   /* Hero */
   .hero { padding-top: 5rem; padding-bottom: 6.5rem; }
@@ -189,8 +193,8 @@
     font-size: 1.1rem;
   }
   .portrait {
-    width: 250px;
-    height: 310px;
+    width: 15.625rem;
+    height: 19.375rem;
     object-fit: cover;
     border-radius: 4px;
     border: 1px solid var(--hairline);
@@ -365,8 +369,8 @@
   }
   .contact-list a:hover { color: var(--crimson); text-decoration: none; }
   .contact-list svg {
-    width: 21px;
-    height: 21px;
+    width: 1.3125rem;
+    height: 1.3125rem;
     flex: none;
     color: var(--crimson);
   }
