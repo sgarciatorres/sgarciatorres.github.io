@@ -278,7 +278,24 @@
     padding-bottom: 0.65rem;
     border-bottom: 1px solid var(--hairline);
   }
-  .section-body > h3:first-child { margin-top: 0; }
+  .section-body > .group:first-child > h3 { margin-top: 0; }
+  @media (min-width: 980px) {
+    /* Sub-headings pin under the rail title. Each one is wrapped with its
+       own entries in .group, which is what bounds the sticky travel: the
+       heading is pushed out as its group ends instead of lingering to the
+       foot of the section. The background masks the entries sliding
+       beneath, and the margin absorbs the padding so the rhythm is
+       unchanged. */
+    .group > h3 {
+      position: sticky;
+      top: calc(5.5rem + env(safe-area-inset-top, 0px));
+      z-index: 1;
+      background: var(--paper);
+      margin-top: 3.6rem;
+      padding-top: 0.9rem;
+    }
+    .section-body > .group:first-child > h3 { margin-top: -0.9rem; }
+  }
 
   /* News */
   ul.news { list-style: none; margin: 0; padding: 0; }
@@ -308,9 +325,9 @@
     margin: 0 0 0.4rem;
     max-width: 34em;
   }
-  /* Work in progress sits one step below peer-reviewed work: every .pub
-     that follows the second heading in the section body. */
-  .section-body > h3:nth-of-type(2) ~ .pub .pub-title { font-size: 1.15rem; }
+  /* Work in progress sits one step below peer-reviewed work: any group
+     that follows another one. */
+  .group + .group .pub-title { font-size: 1.15rem; }
   .pub-meta { margin: 0 0 0.5rem; color: var(--muted); font-size: 1.02rem; line-height: 1.6; }
   .pub-venue { color: var(--ink); }
   .pub-links {
@@ -441,7 +458,7 @@
 
     .pub { margin-bottom: 2.5rem; }
     .pub-title { font-size: 1.2rem; }
-    .section-body > h3:nth-of-type(2) ~ .pub .pub-title { font-size: 1.08rem; }
+    .group + .group .pub-title { font-size: 1.08rem; }
     .pub-meta { font-size: 0.98rem; }
     .pub summary { padding: 0.35rem 0; }
     .pub details p { padding: 0.95rem 1rem; font-size: 0.97rem; }
@@ -518,52 +535,55 @@
   <section class="wrap reveal" id="research">
     <h2>Research</h2>
     <div class="section-body">
+      <div class="group">
+        <h3>Peer-reviewed publications</h3>
 
-      <h3>Peer-reviewed publications</h3>
+        <article class="pub">
+          <p class="pub-title">Women in Political Power and School Closure during COVID Times</p>
+          <p class="pub-meta">with <a href="https://www.wiwiss.fu-berlin.de/en/fachbereich/vwl/danzer/Team/Professorin/Natalia-Danzer/index.html" target="_blank" rel="noopener">Natalia Danzer</a>, <a href="https://sites.google.com/site/maxfriedrichsteinhardt/home" target="_blank" rel="noopener">Max Steinhardt</a>, and <a href="https://www.lucastella.eu/" target="_blank" rel="noopener">Luca Stella</a> &middot; <em class="pub-venue">Economic Policy</em>, 2024, 39(120), 765&ndash;810</p>
+          <p class="pub-links">
+            <a href="https://doi.org/10.1093/epolic/eiae033" target="_blank" rel="noopener">Publication</a>
+            <a href="https://cepr.org/voxeu/columns/womens-political-representation-matters-evidence-school-closures-during-pandemic" target="_blank" rel="noopener">VoxEU column</a>
+            <a href="https://nadaesgratis.es/admin/la-representacion-de-las-mujeres-en-la-politica-importa-evidencia-de-los-cierres-escolares-durante-la-pandemia" target="_blank" rel="noopener">Nada es Gratis</a>
+          </p>
+          <details>
+            <summary>Abstract</summary>
+            <p>This study explores the relationship between women&rsquo;s representation in political power and school closures during the COVID-19 pandemic. Using a cross-country dataset in Europe, we document a striking negative relationship between the share of female members in national governments and school closures. We show that a one standard deviation increase in female members of national governments is associated with a significant reduction in the likelihood of school lockdowns by 24% relative to the average share of school closures. This result is robust to an extensive set of sensitivity checks. We attribute this pattern to a higher awareness of female politicians about the potential costs that school closures imply for families, in particular working mothers with young children.</p>
+          </details>
+        </article>
+      </div>
 
-      <article class="pub">
-        <p class="pub-title">Women in Political Power and School Closure during COVID Times</p>
-        <p class="pub-meta">with <a href="https://www.wiwiss.fu-berlin.de/en/fachbereich/vwl/danzer/Team/Professorin/Natalia-Danzer/index.html" target="_blank" rel="noopener">Natalia Danzer</a>, <a href="https://sites.google.com/site/maxfriedrichsteinhardt/home" target="_blank" rel="noopener">Max Steinhardt</a>, and <a href="https://www.lucastella.eu/" target="_blank" rel="noopener">Luca Stella</a> &middot; <em class="pub-venue">Economic Policy</em>, 2024, 39(120), 765&ndash;810</p>
-        <p class="pub-links">
-          <a href="https://doi.org/10.1093/epolic/eiae033" target="_blank" rel="noopener">Publication</a>
-          <a href="https://cepr.org/voxeu/columns/womens-political-representation-matters-evidence-school-closures-during-pandemic" target="_blank" rel="noopener">VoxEU column</a>
-          <a href="https://nadaesgratis.es/admin/la-representacion-de-las-mujeres-en-la-politica-importa-evidencia-de-los-cierres-escolares-durante-la-pandemia" target="_blank" rel="noopener">Nada es Gratis</a>
-        </p>
-        <details>
-          <summary>Abstract</summary>
-          <p>This study explores the relationship between women&rsquo;s representation in political power and school closures during the COVID-19 pandemic. Using a cross-country dataset in Europe, we document a striking negative relationship between the share of female members in national governments and school closures. We show that a one standard deviation increase in female members of national governments is associated with a significant reduction in the likelihood of school lockdowns by 24% relative to the average share of school closures. This result is robust to an extensive set of sensitivity checks. We attribute this pattern to a higher awareness of female politicians about the potential costs that school closures imply for families, in particular working mothers with young children.</p>
-        </details>
-      </article>
+      <div class="group">
+        <h3>Selected work in progress</h3>
 
-      <h3>Selected work in progress</h3>
+        <article class="pub">
+          <p class="pub-title">The Effect of Interracial Peers on Political Preferences: Evidence from Longitudinal Data from Schools in the United States</p>
+          <details>
+            <summary>Abstract</summary>
+            <p>This study explores the enduring influence of Black peers in school on their classmates&rsquo; future political preferences. Using comprehensive panel data from a representative sample of US school students followed over time, I leverage quasi-random variation in the share of Black peers across cohorts within a school. The results suggest that a higher proportion of same-gender Black peers is associated with a lower likelihood of holding conservative political preferences in the future. I focus on political preferences in a period in the United States, when race was a highly decisive issue, i.e., the election year of Barack Obama, thus highlighting the importance of topic salience on peer effects. I provide suggestive evidence for the argument that the re-categorization of different racial groups into a shared school-belonging identity may be one of the forces behind these results.</p>
+          </details>
+        </article>
 
-      <article class="pub">
-        <p class="pub-title">The Effect of Interracial Peers on Political Preferences: Evidence from Longitudinal Data from Schools in the United States</p>
-        <details>
-          <summary>Abstract</summary>
-          <p>This study explores the enduring influence of Black peers in school on their classmates&rsquo; future political preferences. Using comprehensive panel data from a representative sample of US school students followed over time, I leverage quasi-random variation in the share of Black peers across cohorts within a school. The results suggest that a higher proportion of same-gender Black peers is associated with a lower likelihood of holding conservative political preferences in the future. I focus on political preferences in a period in the United States, when race was a highly decisive issue, i.e., the election year of Barack Obama, thus highlighting the importance of topic salience on peer effects. I provide suggestive evidence for the argument that the re-categorization of different racial groups into a shared school-belonging identity may be one of the forces behind these results.</p>
-        </details>
-      </article>
+        <article class="pub">
+          <p class="pub-title">Risky Peers and Crime</p>
+          <p class="pub-meta">with <a href="https://sites.google.com/site/oliviermarie/" target="_blank" rel="noopener">Olivier Marie</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/" target="_blank" rel="noopener">Max Steinhardt</a></p>
+          <p class="pub-links"><a href="https://drive.google.com/file/d/1dhB8eRJ2n1FpPF9uL2h4-RWdoukheg6Q/view?usp=sharing" target="_blank" rel="noopener">Slides</a></p>
+          <details>
+            <summary>Abstract</summary>
+            <p>This paper investigates how youth peer environments shape long-term criminal outcomes. While peer influence is known to affect adolescent behavior, we still lack causal evidence on how much peers matter for criminal involvement&mdash;both as perpetrators and as victims. Using rich data from the Add Health study, we estimate the causal effect of exposure to risk-prone peers during adolescence on adult crime. Because risk preference is only partially observed in the data, we use machine learning techniques to impute missing responses and construct school-cohort level measures of peer risk attitudes. We then exploit variation in peer composition across school grades to identify the effect of peer exposure on future criminal outcomes. We provide the first causal evidence that adolescent peer risk preferences influence both criminal perpetration and victimization. Individuals exposed to a higher share of risk-prone peers are significantly more likely to engage in crime later in life. These effects are especially pronounced for same-gender peers and are notably strong among women. Our findings underscore the importance of peer environments in shaping gendered pathways into crime and highlight the role of social risk transmission in long-term behavioral development.</p>
+          </details>
+        </article>
 
-      <article class="pub">
-        <p class="pub-title">Risky Peers and Crime</p>
-        <p class="pub-meta">with <a href="https://sites.google.com/site/oliviermarie/" target="_blank" rel="noopener">Olivier Marie</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/" target="_blank" rel="noopener">Max Steinhardt</a></p>
-        <p class="pub-links"><a href="https://drive.google.com/file/d/1dhB8eRJ2n1FpPF9uL2h4-RWdoukheg6Q/view?usp=sharing" target="_blank" rel="noopener">Slides</a></p>
-        <details>
-          <summary>Abstract</summary>
-          <p>This paper investigates how youth peer environments shape long-term criminal outcomes. While peer influence is known to affect adolescent behavior, we still lack causal evidence on how much peers matter for criminal involvement&mdash;both as perpetrators and as victims. Using rich data from the Add Health study, we estimate the causal effect of exposure to risk-prone peers during adolescence on adult crime. Because risk preference is only partially observed in the data, we use machine learning techniques to impute missing responses and construct school-cohort level measures of peer risk attitudes. We then exploit variation in peer composition across school grades to identify the effect of peer exposure on future criminal outcomes. We provide the first causal evidence that adolescent peer risk preferences influence both criminal perpetration and victimization. Individuals exposed to a higher share of risk-prone peers are significantly more likely to engage in crime later in life. These effects are especially pronounced for same-gender peers and are notably strong among women. Our findings underscore the importance of peer environments in shaping gendered pathways into crime and highlight the role of social risk transmission in long-term behavioral development.</p>
-        </details>
-      </article>
+        <article class="pub">
+          <p class="pub-title">Buffalo Soldiers</p>
+          <p class="pub-meta">with <a href="https://andreas-ferrara.com/" target="_blank" rel="noopener">Andreas Ferrara</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/" target="_blank" rel="noopener">Max Steinhardt</a></p>
+        </article>
 
-      <article class="pub">
-        <p class="pub-title">Buffalo Soldiers</p>
-        <p class="pub-meta">with <a href="https://andreas-ferrara.com/" target="_blank" rel="noopener">Andreas Ferrara</a> and <a href="https://sites.google.com/site/maxfriedrichsteinhardt/" target="_blank" rel="noopener">Max Steinhardt</a></p>
-      </article>
-
-      <article class="pub">
-        <p class="pub-title">Polygyny and Child Marriage in Sub-Saharan Africa</p>
-        <p class="pub-meta">with <a href="https://sites.harvard.edu/laferrara/" target="_blank" rel="noopener">Eliana La Ferrara</a></p>
-      </article>
+        <article class="pub">
+          <p class="pub-title">Polygyny and Child Marriage in Sub-Saharan Africa</p>
+          <p class="pub-meta">with <a href="https://sites.harvard.edu/laferrara/" target="_blank" rel="noopener">Eliana La Ferrara</a></p>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -573,12 +593,14 @@
       <p><a class="cv-download" href="garcia_torres_cv_202610.pdf" target="_blank" rel="noopener">Open CV</a></p>
       <p>Research Fellow, Harvard Center for International Development (2025&ndash;present).</p>
 
-      <h3>Conferences and seminars</h3>
-      <dl class="conf">
-        <dt>2025</dt><dd>14th Alp-Pop Conference; Harvard CID Research X-Change</dd>
-        <dt>2024</dt><dd>37th Annual Conference ESPE; BeNa Winter Workshop</dd>
-        <dt>2023</dt><dd>ifo CEMIR Seminar</dd>
-      </dl>
+      <div class="group">
+        <h3>Conferences and seminars</h3>
+        <dl class="conf">
+          <dt>2025</dt><dd>14th Alp-Pop Conference; Harvard CID Research X-Change</dd>
+          <dt>2024</dt><dd>37th Annual Conference ESPE; BeNa Winter Workshop</dd>
+          <dt>2023</dt><dd>ifo CEMIR Seminar</dd>
+        </dl>
+      </div>
     </div>
   </section>
 
@@ -667,18 +689,25 @@
   // the window, so fading it as a unit only ever showed at the seams.
   var blend = Array.prototype.slice.call(document.querySelectorAll([
     '.hero h1', '.hero .role', '.hero .interests', '.hero .bio', '.portrait',
-    '.section-body > h3', '.section-body > p',
+    '.section-body > p',
     'ul.news > li', 'article.pub',
     'dl.conf > dt', 'dl.conf > dd', '.contact-list > li'
   ].join(',')));
-  // A pinned title is driven by its own section's position instead, so it
-  // holds at full strength the whole way down and hands over at the seam.
-  var railTitles = [].slice.call(document.querySelectorAll('section > h2'));
+  // Pinned headings -- the rail title and the sub-headings beside it. Once
+  // one is stuck near the top of the window the per-block fade would read
+  // its box as leaving and hold it faded, so these take their opacity from
+  // their section's travel instead.
+  var pinnedHeads = [].slice.call(
+      document.querySelectorAll('section > h2, .group > h3'))
+    .map(function (el) {
+      return { el: el, sec: el.closest ? el.closest('section') : el.parentNode };
+    });
   var railQuery = window.matchMedia('(min-width: 980px)');
   var pinnedTop = 88;
   var measurePinned = function () {
-    if (railTitles.length && railQuery.matches) {
-      var v = parseFloat(window.getComputedStyle(railTitles[0]).top);
+    var first = document.querySelector('section > h2');
+    if (first && railQuery.matches) {
+      var v = parseFloat(window.getComputedStyle(first).top);
       if (!isNaN(v)) pinnedTop = v;
     }
   };
@@ -703,22 +732,22 @@
       }
 
       var pinned = railQuery.matches;
-      for (var j = 0; j < railTitles.length; j++) {
-        var title = railTitles[j];
+      for (var j = 0; j < pinnedHeads.length; j++) {
+        var head = pinnedHeads[j];
         var q;
         if (pinned) {
           // Fade on the section's own travel: in as it arrives, out over the
-          // last stretch so it clears before the next title takes the rail.
-          var sec = title.parentNode.getBoundingClientRect();
+          // last stretch so it clears before the next section claims the top.
+          var sec = head.sec.getBoundingClientRect();
           q = Math.min((vh - sec.top) / botBand, (sec.bottom - pinnedTop) / 170);
         } else {
-          var own = title.getBoundingClientRect();
+          var own = head.el.getBoundingClientRect();
           q = Math.min((vh - own.top) / botBand, own.bottom / topBand);
         }
         q = Math.min(1, Math.max(0, q));
-        title.style.opacity = q * q * (3 - 2 * q);
-        // No translate here: it would shift a pinned title off its offset.
-        title.style.transform = '';
+        head.el.style.opacity = q * q * (3 - 2 * q);
+        // No translate here: it would shift a pinned heading off its offset.
+        head.el.style.transform = '';
       }
     };
     var schedule = function () {
